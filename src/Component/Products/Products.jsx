@@ -2,7 +2,7 @@ import React from "react";
 import Product from "./Product/Product";
 import Grid from "@mui/material/Grid";
 import './products.module.scss'
-function Products({productList}) {
+function Products({productList,handleAddtoCart}) {
   
   return (
     <div className="" style={{marginTop:15, padding:30}}>
@@ -24,7 +24,7 @@ function Products({productList}) {
               md={4}
               lg={3}
             >
-              <Product item={item} />
+              <Product item={item} handleAddtoCart={handleAddtoCart} />
             </Grid>
           );
         })}

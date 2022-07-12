@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import style from './product.module.scss'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-export default function Product({item}) {
+export default function Product({item,handleAddtoCart}) {
 
   return (
     <Card sx={{ maxWidth: 345 }} style={{borderRadius:10}}>
@@ -17,7 +17,6 @@ export default function Product({item}) {
         // height="140"
         // image="https://animals.sandiegozoo.org/sites/default/files/2017-07/animals-lizard-redheadedrockagama.jpg"
         image={item.image.url}
-        object-fit
         alt="green iguana"
       />
       <CardContent>
@@ -34,10 +33,10 @@ export default function Product({item}) {
       </div>
       </CardContent>
       <CardActions style={{display:'flex',justifyContent:"space-between"}}>
-        <Button size="large">
+        <Button size="large" onClick={()=>{handleAddtoCart(item.id)}}>
             <ShoppingCartIcon/> Buy Now
         </Button>
-        <Button size="large">Learn More</Button>
+        {/* <Button size="large">Learn More</Button> */}
       </CardActions>
     </Card>
   );
