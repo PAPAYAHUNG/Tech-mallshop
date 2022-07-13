@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
+import Loading from "./Component/Loading/Loading";
 import Navbar from "./Component/Navbar/Navbar";
 import Products from "./Component/Products/Products";
 import { commerce } from "./lib/commerce";
+import {useSelector,useDispatch} from 'react-redux'
+import { setCartList, setIsloading } from "./Redux/Slice/ecommerceSlice";
 function App() {
+  const {isLoading} = useSelector(state=>state.quantityReducer)
+  const dispatch = useDispatch()
+
   const [productList, setProductList] = useState([]);
   const [cart, setCart] = useState([]);
+  
   console.log({ productList });
   console.log({ cart });
   const fetchProduct = async () => {
@@ -17,11 +24,15 @@ function App() {
   const fetchCart = async () => {
     const cart = await commerce.cart.retrieve();
     setCart(cart);
+    dispatch(setCartList(cart))
   };
 
-  const handleAddtoCart =async (id) => {
-    const cartAdd = await commerce.cart.add(id, 1)
+  const handleAddtoCart =async (id,qty) => {
+    dispatch(setIsloading())
+    const cartAdd = await commerce.cart.add(id, qty)
     console.log({cartAdd})
+    await fetchCart()
+    dispatch(setIsloading())
 
   };
 
@@ -32,8 +43,9 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
-      <Products productList={productList} handleAddtoCart={handleAddtoCart} />
+      {isLoading && <Loading/>}
+      <Navbar cart={cart} />
+      <Products productList={productList} cart={cart} handleAddtoCart={handleAddtoCart} />
     </div>
   );
 }
