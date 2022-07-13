@@ -13,9 +13,9 @@ export default function Product({ item, handleAddtoCart,cart }) {
   const dispatch = useDispatch()
   // const {quantity} = useSelector(state=>state.quantityReducer)
   // console.log({quantity})
-console.log('cart inside',cart)
+// console.log('cart inside',cart)
   const objectFound = cart?.line_items?.find(cartItem=>cartItem.product_id === item.id)
-  console.log({objectFound})
+  // console.log({objectFound})
   const quantity = objectFound?.quantity
   return (
     <Card sx={{ maxWidth: 345 }} style={{ borderRadius: 10 }}>

@@ -44,7 +44,7 @@ function App() {
   return (
     <div className="App">
       {isLoading && <Loading/>}
-      <Navbar cart={cart} />
+      <Navbar cart={cart} handleAddtoCart={handleAddtoCart}/>
       <Products productList={productList} cart={cart} handleAddtoCart={handleAddtoCart} />
     </div>
   );

@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Cart from "../Cart/Cart";
 import { setIsOpenCart } from "../../Redux/Slice/ecommerceSlice";
 
-function Navbar() {
-  const { isOpenCart } = useSelector((state) => state.quantityReducer);
+function Navbar({handleAddtoCart}) {
+  const { isOpenCart,cartList } = useSelector((state) => state.quantityReducer);
   const dispatch = useDispatch();
   return (
     <div>
@@ -49,11 +49,11 @@ function Navbar() {
               fontWeight: "bold",
             }}
           >
-            1
+            {cartList?.total_items}
           </span>
         </div>
       </div>
-      <div>{isOpenCart && <Cart />}</div>
+      <div>{isOpenCart && <Cart handleAddtoCart={handleAddtoCart} />}</div>
     </div>
   );
 }
