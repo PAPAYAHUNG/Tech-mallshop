@@ -3,58 +3,22 @@ import { Navbar, Loading, Products } from "./Component/index";
 import { commerce } from "./lib/commerce";
 import { useSelector, useDispatch } from "react-redux";
 import { setCartList, setIsloading } from "./Redux/Slice/ecommerceSlice";
+import { Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home/Home";
+import Checkout from "./Component/Checkout/Checkout";
 function App() {
-  const { isLoading } = useSelector((state) => state.quantityReducer);
-  const dispatch = useDispatch();
 
-  const [productList, setProductList] = useState([]);
-  const [cart, setCart] = useState([]);
-
-  console.log({ productList });
-  console.log({ cart });
-  const fetchProduct = async () => {
-    try {
-      const { data } = await commerce.products.list();
-      setProductList(data);
-    } catch (err) {}
-  };
-
-  const fetchCart = async () => {
-    const cart = await commerce.cart.retrieve();
-    setCart(cart);
-    dispatch(setCartList(cart));
-  };
-
-  const handleAddtoCart = async (id, qty) => {
-    dispatch(setIsloading());
-    const cartAdd = await commerce.cart.add(id, qty);
-    console.log({ cartAdd });
-    await fetchCart();
-    dispatch(setIsloading());
-  };
-
-  const handleEmptyCard = async () => {
-    dispatch(setIsloading());
-    const cart = await commerce.cart.empty();
-    // setCart(cart);
-    await fetchCart();
-    dispatch(setIsloading());
-  };
-
-  useEffect(() => {
-    fetchProduct();
-    fetchCart();
-  }, []);
 
   return (
     <div className="App">
-      {isLoading && <Loading />}
-      <Navbar cart={cart} handleAddtoCart={handleAddtoCart} handleEmptyCard={handleEmptyCard} />
-      <Products
-        productList={productList}
-        cart={cart}
-        handleAddtoCart={handleAddtoCart}
-      />
+      
+      <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/checkout" element={<Checkout/>}/>
+           
+
+         
+      </Routes>
     </div>
   );
 }

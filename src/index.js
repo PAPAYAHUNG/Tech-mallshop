@@ -6,13 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 import Globalstyles from "./Component/GlobalStyle/Globalstyles";
 import { Provider } from "react-redux";
 import { store } from "./Redux/ConfigureStrore";
+import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={store}>
-    <Globalstyles>
-      <App />
-    </Globalstyles>
-  </Provider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <Globalstyles>
+        <App />
+      </Globalstyles>
+    </Provider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

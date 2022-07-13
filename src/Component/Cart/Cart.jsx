@@ -4,10 +4,12 @@ import { setIsOpenCart } from "../../Redux/Slice/ecommerceSlice";
 import Button from "@mui/material/Button";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EmptyCart from "./EmptyCart";
+import { useNavigate } from "react-router-dom";
 
 function Cart({ cart, handleAddtoCart, handleEmptyCard }) {
   const { cartList } = useSelector((state) => state.quantityReducer);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   console.log("cart in tab cart", cartList);
 
   const isEmptyCart = !cartList.line_items.length;
@@ -85,7 +87,8 @@ function Cart({ cart, handleAddtoCart, handleEmptyCard }) {
       <div className="flex justify-between p-10">
         <span>Total </span>
         <div className="  text-2xl font-bold text-red-700">
-          {cartList?.line_items?.reduce((acc, item, index) => {
+          
+          ${cartList?.line_items?.reduce((acc, item, index) => {
             return (acc += item.quantity * item.price.raw);
           }, 0)}
         </div>
@@ -105,6 +108,7 @@ function Cart({ cart, handleAddtoCart, handleEmptyCard }) {
           className="p-5 text-right bg-indigo-500 rounded-2xl"
           onClick={() => {
             dispatch(setIsOpenCart());
+            navigate('/checkout')
           }}
         >
           Checkout
