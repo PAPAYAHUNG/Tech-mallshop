@@ -4,7 +4,8 @@ const initialState = {
   quantity: 0,
   isLoading:false,
   isOpenCart:false,
-  cartList:[]
+  cartList:[],
+  
 }
 
 export const counterSlice = createSlice({
