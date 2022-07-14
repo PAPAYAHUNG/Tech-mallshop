@@ -3,30 +3,79 @@ import { useRef } from "react";
 import { useState } from "react";
 import { commerce } from "../../../lib/commerce";
 
-function AddressForm({checkoutToken}) {
+function AddressForm({ checkoutToken }) {
   const [shippingCountries, setShippingCountries] = useState([]);
-  const [shippingCountrie, setShippingCountrie] = useState("");
+  const [shippingCountry, setShippingCountry] = useState("");
   const [shippingSubdivisions, setShippingSubdivisions] = useState([]);
   const [shippingSubdivision, setShippingSubdivision] = useState("");
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingOption, setShippingOption] = useState("");
 
+  console.log({checkoutToken});
+  //Fetching shipping countries
   const fetchShippingCountries = async (checkoutToken) => {
     try {
-      const { countries } = await commerce.services.localeListShippingCountries(checkoutToken);
-        setShippingCountries(countries)
-      
+      const { countries } = await commerce.services.localeListShippingCountries(
+        checkoutToken
+      );
+  
+      setShippingCountries(countries);
+      setShippingCountry(Object.keys(countries)[0]);
     } catch (err) {
-        console.log({err});
+      console.log({ err });
     }
   };
 
-  console.log({shippingCountries})
+  //Fetching subdivision
+  const fetchShippingSubDevisons = async (shippingCountry)=>{
+    try {
+      const {subdivisions} = await commerce.services.localeListShippingSubdivisions(checkoutToken,shippingCountry)
+      setShippingSubdivisions(subdivisions)
+      setShippingSubdivision(Object.keys(subdivisions)[0])
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  useEffect(()=>{
-    fetchShippingCountries()
-  },[])
+  //Fetch shipping options
+  const fetchShippingOptions = async (checkoutTokenID,shipping_option_id,country, region=null)=>{
+    try {
+      const resolve = await commerce.checkout.checkShippingOption(checkoutTokenID,{ shipping_option_id,country, region})
+      console.log({resolve})
+      setShippingOptions(resolve.shipping.available_options)
+      setShippingOption(resolve.shipping.available_options[0])
+    } catch (error) { 
+      console.log({error});
+    }
+  }
+  //Turn object to array type
+  const modifiedArrShippingCoutries = Object.entries(shippingCountries).map(([item,meaning])=>{return {key:item,meaning:meaning}})
+  console.log({modifiedArrShippingCoutries});
+  console.log({ shippingCountries });
+  console.log({ shippingSubdivisions });
+  console.log({ shippingCountry });
+  console.log({ shippingSubdivision });
 
+  const modifiedArrSubdivisions = Object.entries(shippingSubdivisions).map(([item,meaning])=>{return {key:item,meaning:meaning}})
+  console.log({modifiedArrSubdivisions});
+ 
+
+  useEffect(() => {
+    fetchShippingCountries();
+  }, []);
+
+  useEffect(() => {
+    if(shippingCountry){
+      fetchShippingSubDevisons(shippingCountry);
+    }
+  }, [shippingCountry,setShippingCountry]);
+  useEffect(() => {
+  if(shippingSubdivision){
+    fetchShippingOptions(checkoutToken?.id,checkoutToken?.shipping_methods[0].id,shippingCountry,shippingSubdivision);
+
+  }
+  
+  }, [shippingSubdivision]);
 
   const [input, setInput] = useState({
     firstname: "",
@@ -59,12 +108,12 @@ function AddressForm({checkoutToken}) {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 text-center p-10 gap-4">
-        <div className="mt-4">
+      <div className="p-10 gap-4">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 text-center ">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Fistname
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             ref={refInput}
@@ -74,11 +123,10 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Last name
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             type="text"
@@ -87,11 +135,10 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Address
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             type="text"
@@ -100,11 +147,10 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Email
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             type="text"
@@ -113,11 +159,10 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             City
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             type="text"
@@ -126,11 +171,10 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Zip/ Postal code
           </label>{" "}
-          <br />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             type="text"
@@ -139,13 +183,54 @@ function AddressForm({checkoutToken}) {
             onChange={handleChange}
           />
         </div>
+       
+     
+      </div>
+      <div className="mt-3">
+          <select
+            value={shippingCountry}
+            onChange={(e)=>{setShippingCountry(e.target.value)}}
+            id="countries"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            {modifiedArrShippingCoutries.map((item,index)=>{
+              return <option key={index} value={item.key} >{item.meaning}</option>
+            })}
+       
+          </select>
+        </div>
+        <div  className="mt-3">
+          <select
+            value={shippingSubdivision}
+            onChange={(e)=>{setShippingSubdivision(e.target.value)}}
+            id="countries"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            {modifiedArrSubdivisions.map((item)=>{
+              return    <option value={item.key} key={item.key}>{item.meaning}</option>
+            })}
+          </select>
+        </div>
+        <div  className="mt-3">
+          <select
+            value={shippingOption}
+            onChange={(e)=>{setShippingOption(e.target.value)}}
+            id="countries"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+          {shippingOptions.map((item,index)=>{
+              return   <option value={item.price.raw} key={index}>{`${item.description} -${item.price.raw}`}</option>
+            })}
+        
+          </select>
+        </div>
         <button
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           type="submit"
         >
           Submit
         </button>
-      </div>
+      </div >
     </form>
   );
 }
