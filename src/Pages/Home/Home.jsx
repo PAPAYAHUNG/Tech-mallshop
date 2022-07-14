@@ -11,8 +11,8 @@ function Home() {
   const [productList, setProductList] = useState([]);
   const [cart, setCart] = useState([]);
 
-  console.log({ productList });
-  console.log({ cart });
+  // console.log({ productList });
+  // console.log({ cart });
   const fetchProduct = async () => {
     try {
       const { data } = await commerce.products.list();

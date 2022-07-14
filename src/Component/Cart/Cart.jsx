@@ -58,7 +58,7 @@ function Cart({ cart, handleAddtoCart, handleEmptyCard }) {
                       variant="outlined"
                       color="error"
                       onClick={() => {
-                        if (item.quantity < 0) {
+                        if (item.quantity <= 0) {
                           alert("Quantity as least 0");
                         } else {
                           // console.log('im clicked')

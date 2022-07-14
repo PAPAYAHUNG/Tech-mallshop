@@ -52,7 +52,7 @@ export default function Product({ item, handleAddtoCart,cart }) {
         >
           <ShoppingCartIcon /> Buy Now
         </Button>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Button
             style={{ fontSize: 15, fontWeight: 700 }}
             size="small"
@@ -74,7 +74,7 @@ export default function Product({ item, handleAddtoCart,cart }) {
             variant="outlined"
             color="error"
             onClick={()=>{
-              if(quantity<0){
+              if(quantity<=0){
                 alert('Quantity as least 0')
               }
               else{
@@ -88,7 +88,7 @@ export default function Product({ item, handleAddtoCart,cart }) {
           >
             -
           </Button>
-        </div>
+        </div> */}
       </CardActions>
     </Card>
   );

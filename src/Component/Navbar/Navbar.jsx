@@ -11,7 +11,7 @@ function Navbar({handleAddtoCart,handleEmptyCard}) {
   const { isOpenCart,cartList } = useSelector((state) => state.quantityReducer);
   const dispatch = useDispatch();
   const location = useLocation()
-  console.log({location});
+  // console.log({location});
   return (
     <div>
       <div
