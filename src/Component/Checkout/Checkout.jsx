@@ -37,7 +37,7 @@ function Checkout() {
     createToken();
   }, []);
 
-  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken}/> : <PaymentForm />);
+  const Form = () => (activeStep === 0 ? <AddressForm setActiveStep={setActiveStep} checkoutToken={checkoutToken}/> : <PaymentForm />);
 
 
   const Confirmation = () => <div>Your process is complete</div>;

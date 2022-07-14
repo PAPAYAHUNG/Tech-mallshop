@@ -4,7 +4,9 @@ import { useRef } from "react";
 import { useState } from "react";
 import { commerce } from "../../../lib/commerce";
 import { useFormik } from "formik";
-function AddressForm({ checkoutToken }) {
+import { useNavigate } from "react-router-dom";
+
+function AddressForm({ checkoutToken,setActiveStep }) {
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState("");
   const [shippingSubdivisions, setShippingSubdivisions] = useState([]);
@@ -12,6 +14,7 @@ function AddressForm({ checkoutToken }) {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingOption, setShippingOption] = useState("");
 
+  const navigate = useNavigate()
   const refInput = useRef();
   const formik = useFormik({
     initialValues: {
@@ -179,7 +182,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.firstname}
             />
             {formik.touched.firstname && formik.errors.firstname ? (
-              <span className="text-red-500">{formik.errors.firstname}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.firstname}
+              </span>
             ) : null}
           </div>
           <div className="mt-2">
@@ -195,7 +200,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.lastname}
             />
             {formik.touched.lastname && formik.errors.lastname ? (
-              <span className="text-red-500">{formik.errors.lastname}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.lastname}
+              </span>
             ) : null}
           </div>
           <div className="mt-2">
@@ -211,7 +218,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.address}
             />
             {formik.touched.address && formik.errors.address ? (
-              <span className="text-red-500">{formik.errors.address}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.address}
+              </span>
             ) : null}
           </div>
           <div className="mt-2">
@@ -227,7 +236,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.email}
             />
             {formik.touched.email && formik.errors.email ? (
-              <span className="text-red-500">{formik.errors.email}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.email}
+              </span>
             ) : null}
           </div>
           <div className="mt-2">
@@ -243,7 +254,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.city}
             />
             {formik.touched.city && formik.errors.city ? (
-              <span className="text-red-500">{formik.errors.city}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.city}
+              </span>
             ) : null}
           </div>
           <div className="mt-2">
@@ -259,7 +272,9 @@ function AddressForm({ checkoutToken }) {
               value={formik.values.zip}
             />
             {formik.touched.zip && formik.errors.zip ? (
-              <span className="text-red-500">{formik.errors.zip}</span >
+              <span className="text-red-500 text-sm font-medium">
+                {formik.errors.zip}
+              </span>
             ) : null}
           </div>
         </div>
@@ -318,12 +333,22 @@ function AddressForm({ checkoutToken }) {
             })}
           </select>
         </div>
-        <button
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="submit"
-        >
-          Submit
-        </button>
+        <div className="flex justify-between mt-5">
+          <button
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+            onClick={()=>{ navigate('/')}}
+          >
+            Back to Cart
+          </button>
+          <button
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+            onClick={()=>{ setActiveStep(1)}}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </form>
   );
