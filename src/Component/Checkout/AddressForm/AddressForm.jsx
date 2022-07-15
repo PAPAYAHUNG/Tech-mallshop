@@ -6,7 +6,7 @@ import { commerce } from "../../../lib/commerce";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
-function AddressForm({ checkoutToken,setActiveStep }) {
+function AddressForm({ checkoutToken,handleNext }) {
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState("");
   const [shippingSubdivisions, setShippingSubdivisions] = useState([]);
@@ -43,11 +43,13 @@ function AddressForm({ checkoutToken,setActiveStep }) {
     }),
     onSubmit: (values, { resetForm }) => {
       console.log({ values });
+      handleNext({...values,shippingCountry,shippingSubdivision,shippingOption})
+      // handleNext(values)
       resetForm();
     },
   });
 
-  console.log({ checkoutToken });
+  // console.log({ checkoutToken });
   //Fetching shipping countries
   const fetchShippingCountries = async (checkoutToken) => {
     try {
@@ -89,7 +91,7 @@ function AddressForm({ checkoutToken,setActiveStep }) {
         checkoutTokenID,
         { shipping_option_id, country, region }
       );
-      console.log({ resolve });
+      // console.log({ resolve });
       setShippingOptions(resolve.shipping.available_options);
       setShippingOption(resolve.shipping.available_options[0]);
     } catch (error) {
@@ -102,18 +104,18 @@ function AddressForm({ checkoutToken,setActiveStep }) {
       return { key: item, meaning: meaning };
     }
   );
-  console.log({ modifiedArrShippingCoutries });
-  console.log({ shippingCountries });
-  console.log({ shippingSubdivisions });
-  console.log({ shippingCountry });
-  console.log({ shippingSubdivision });
+  // console.log({ modifiedArrShippingCoutries });
+  // console.log({ shippingCountries });
+  // console.log({ shippingSubdivisions });
+  // console.log({ shippingCountry });
+  // console.log({ shippingSubdivision });
 
   const modifiedArrSubdivisions = Object.entries(shippingSubdivisions).map(
     ([item, meaning]) => {
       return { key: item, meaning: meaning };
     }
   );
-  console.log({ modifiedArrSubdivisions });
+  // console.log({ modifiedArrSubdivisions });
 
   useEffect(() => {
     fetchShippingCountries();
@@ -285,7 +287,7 @@ function AddressForm({ checkoutToken,setActiveStep }) {
               setShippingCountry(e.target.value);
             }}
             id="countries"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             {modifiedArrShippingCoutries.map((item, index) => {
               return (
@@ -303,7 +305,7 @@ function AddressForm({ checkoutToken,setActiveStep }) {
               setShippingSubdivision(e.target.value);
             }}
             id="countries"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             {modifiedArrSubdivisions.map((item) => {
               return (
@@ -321,7 +323,7 @@ function AddressForm({ checkoutToken,setActiveStep }) {
               setShippingOption(e.target.value);
             }}
             id="countries"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             {shippingOptions.map((item, index) => {
               return (
@@ -343,8 +345,8 @@ function AddressForm({ checkoutToken,setActiveStep }) {
           </button>
           <button
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button"
-            onClick={()=>{ setActiveStep(1)}}
+            type="submit"
+           
           >
             Next
           </button>

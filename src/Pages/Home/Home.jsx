@@ -42,6 +42,8 @@ function Home() {
     dispatch(setIsloading());
   };
 
+  
+
   useEffect(() => {
     fetchProduct();
     fetchCart();

@@ -12,16 +12,52 @@ import AddressForm from "./AddressForm/AddressForm";
 import PaymentForm from "./PaymentForm/PaymentForm";
 import { useEffect } from "react";
 import { commerce } from "../../lib/commerce";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCartList } from "../../Redux/Slice/ecommerceSlice";
 
 function Checkout() {
+  const dispatch = useDispatch()
+
   const { cartList } = useSelector((state) => state.quantityReducer);
   console.log({ cartList });
   const [activeStep, setActiveStep] = useState(0);
+  const [order, setOrder] = useState({})
   const steps = ["Shipping Adress", "Payment Detail"];
 
-  const [checkoutToken, setCheckoutToken] = useState(null)
+  const [checkoutToken, setCheckoutToken] = useState(null);
 
+  const [shippingData, setShippingData] = useState({});
+  console.log({shippingData});
+  //next and prev button
+  const next = () => {
+    setActiveStep((prev) => prev + 1);
+  };
+  const prev = () => {
+    setActiveStep((prev) => prev - 1);
+  };
+
+  const handleNext = (data)=>{
+    setShippingData(data)
+    next()
+  }
+
+  const refreshCart = async ()=>{
+    const newCart = await commerce.cart.refresh()
+
+    dispatch(setCartList(newCart))
+  }
+
+  const handleCaptureCheckout = async (checkoutTokenID, newOrder)=>{
+      try {
+        const incomingOrder = await commerce.checkout.capture(checkoutTokenID,newOrder)
+
+        setOrder(incomingOrder)
+        refreshCart()
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  
   useEffect(() => {
     async function createToken() {
       try {
@@ -29,7 +65,7 @@ function Checkout() {
           type: "cart",
         });
         console.log({ token });
-        setCheckoutToken(token)
+        setCheckoutToken(token);
       } catch (err) {
         console.log({ err });
       }
@@ -37,14 +73,21 @@ function Checkout() {
     createToken();
   }, []);
 
-  const Form = () => (activeStep === 0 ? <AddressForm setActiveStep={setActiveStep} checkoutToken={checkoutToken}/> : <PaymentForm />);
-
+  const Form = () =>
+    activeStep === 0 ? (
+      <AddressForm
+      handleNext={handleNext}
+        checkoutToken={checkoutToken}
+      />
+    ) : (
+      <PaymentForm next={next} shippingData={shippingData} onCaptureCheckout={handleCaptureCheckout} checkoutToken={checkoutToken} prev={prev} />
+    );
 
   const Confirmation = () => <div>Your process is complete</div>;
   return (
     <div>
-      {/* <Navbar /> */}
-      <div className="flex h-screen justify-center items-center">
+      <Navbar />
+      <div className="flex  justify-center items-center">
         <Paper elevation={10} style={{ width: 500 }}>
           <Stepper activeStep={activeStep} style={{ fontSize: 20 }}>
             {steps.map((step, index) => {

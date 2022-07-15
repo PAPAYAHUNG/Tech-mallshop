@@ -5,7 +5,7 @@ import style from "./Navbar.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 import Cart from "../Cart/Cart";
 import { setIsOpenCart } from "../../Redux/Slice/ecommerceSlice";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 function Navbar({handleAddtoCart,handleEmptyCard}) {
   const { isOpenCart,cartList } = useSelector((state) => state.quantityReducer);
@@ -22,10 +22,10 @@ function Navbar({handleAddtoCart,handleEmptyCard}) {
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <NavLink to="/" style={{ display: "flex", alignItems: "center" }}>
           <img src={logo} alt="logo" style={{ width: 60, marginRight: 10 }} />
           <h2 style={{ fontWeight: "bold" }}>Mall Shop</h2>
-        </div>
+        </NavLink>
         {
           location.pathname!=='/checkout' && (
             <div
